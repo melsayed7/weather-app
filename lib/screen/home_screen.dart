@@ -190,17 +190,18 @@ class _HomeScreenState extends State<HomeScreen> {
             children:
              [
                const Text(
-                'Next 5 days forecast information',
+                'Next 5 day forecast information',
                 style: TextStyle(
                   fontSize: 15,
                 ),
               ),
                TextButton(
                    onPressed: () async{
-                     Navigator.push(context, MaterialPageRoute(builder: (context) => WeatherScreen(),));
+                   cityName = Provider.of<WeatherProvider>(context,listen: false).cityName;
                    WeatherService service = WeatherService();
-                   WeatherModel? weather = await service.getAllDataWeather(cityName: cityName!);
-                   Provider.of<WeatherProvider>(context,listen: false).weatherData = weather ;
+                  List< WeatherModel>? weather = await service.getAllDataWeather(cityName:cityName!);
+                   Provider.of<WeatherProvider>(context,listen: false).listWeatherModel = weather ;
+                   Navigator.push(context, MaterialPageRoute(builder: (context) => WeatherScreen(),));
                    },
                    child: const Text(
                      'Click Here',

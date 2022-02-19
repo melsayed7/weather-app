@@ -30,18 +30,31 @@ class WeatherService {
     return weatherModel;
   }
 
-  Future<WeatherModel?> getAllDataWeather({required String cityName}) async {
-    WeatherModel? weatherModel;
-    int cityID = await getCityID(cityName: cityName);
-    Uri url = Uri.parse('$baseUrl/api/location/$cityID/');
-    http.Response response = await http.get(url);
-    Map<String, dynamic> jsonData = jsonDecode(response.body);
+  Future< List<WeatherModel>?> getAllDataWeather({required String cityName}) async {
+    List<WeatherModel> weathersData =[] ;
+    try {
+      int cityID = await getCityID(cityName: cityName);
+      Uri url = Uri.parse('$baseUrl/api/location/$cityID/');
+      http.Response response = await http.get(url);
+      Map<String, dynamic> jsonData = jsonDecode(response.body);
 
-    for(int index = 0; index<6;index++) {
-      Map<String, dynamic> data = jsonData['consolidated_weather'][index];
-      weatherModel =WeatherModel.fromJson(data);
-      print(weatherModel.date);
+      final  listData = jsonData['consolidated_weather'] ;
+
+      //
+     listData.forEach((e) =>weathersData.add(WeatherModel.fromJson(e)) ) ;
+
+      //weathersData = test;
+      print("our data is "+weathersData.toString());
+
+    } catch (e) {
+      print(e);
     }
-    return weatherModel;
+    return weathersData;
   }
 }
+
+/*for(int index = 0; index<6;index++) {
+        Map<String, dynamic> data = jsonData['consolidated_weather'][index];
+        weatherModel =WeatherModel.fromJson(data);
+        print(weatherModel.date);
+      }*/

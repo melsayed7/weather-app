@@ -9,18 +9,26 @@ class WeatherScreen extends StatelessWidget {
   //WeatherModel? model;
   @override
   Widget build(BuildContext context) {
-    WeatherModel? model = Provider.of<WeatherProvider>(context).weatherData;
+    List<WeatherModel>? model =
+        Provider.of<WeatherProvider>(context).listWeatherModel;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Next 5 Days'),
       ),
-      body: ListView.separated(
-        physics: const BouncingScrollPhysics(),
-        itemBuilder: (context, index) => buildWeatherItem(model!),
-        separatorBuilder: (context, index) => const Divider(
-          thickness: 2.0,
-        ),
-        itemCount: 6,
+      body: Consumer<WeatherProvider>(
+        builder: (context, value, _) {
+          return value.listWeatherModel == null
+              ? Container()
+              : ListView.separated(
+                  physics: const BouncingScrollPhysics(),
+                  itemBuilder: (context, index) =>
+                      buildWeatherItem(model![index]),
+                  separatorBuilder: (context, index) => const Divider(
+                    thickness: 2.0,
+                  ),
+                  itemCount: model!.length,
+                );
+        },
       ),
     );
   }
